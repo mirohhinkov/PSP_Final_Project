@@ -1,3 +1,18 @@
+def utils_menu(*menu_items):
+    for i in range(len(menu_items)):
+        print(f"{i + 1}: {menu_items[i]}")
+    try:
+        choice = int(input("Please select an option: "))
+        if choice - 1 in range(len(menu_items)):
+            return choice
+        raise Exception("Out of range")
+    except Exception as err:
+        if err.args[0] == "Out of range":
+            print(f"Please, choose a number from 1 to {len(menu_items)}")
+        else:
+            print(f"Invalid option.")
+
+
 def welcome():
     """
     Task 1: Display a welcome message.
@@ -9,7 +24,9 @@ def welcome():
     :return: Does not return anything.
     """
     # TODO: Your code here
-
+    welcome_msg = "Solar Record Management System"
+    welcome_list = ['*' * len(welcome_msg), welcome_msg, '*' * len(welcome_msg)]
+    print(*welcome_list)
 
 
 def menu():
@@ -28,6 +45,7 @@ def menu():
     :return: None if invalid selection otherwise an integer corresponding to a valid selection
     """
     # TODO: Your code here
+    return utils_menu('Load Data', 'Process Data', 'Visualise Data', 'Save Data', 'Exit')
 
 
 def started(operation):
@@ -42,6 +60,7 @@ def started(operation):
     :return: Does not return anything
     """
     # TODO: Your code here
+    print(f"{operation} has started.")
 
 
 def completed(operation):
@@ -56,6 +75,7 @@ def completed(operation):
     :return: Does not return anything
     """
     # TODO: Your code here
+    print(f"{operation} has completed.")
 
 
 def error(error_msg):
@@ -70,6 +90,7 @@ def error(error_msg):
     :return: Does not return anything
     """
     # TODO: Your code here
+    print(f"Error! {error_msg}.")
 
 
 def source_data_path():
@@ -84,6 +105,13 @@ def source_data_path():
     :return: None if the file path does not end in 'csv' otherwise return the file path entered by the user
     """
     # TODO: Your code here
+    path = input("Please enter the file path for a data file: ").strip()
+
+    path_list = path.split(".")
+    if len(path_list) >= 2 and path_list[-1] == 'csv':
+        return path
+    else:
+        print("Please enter a proper file name (including path)")
 
 
 def process_type():
@@ -103,6 +131,8 @@ def process_type():
     :return: None if an invalid selection made otherwise an integer corresponding to a valid option
     """
     # TODO: Your code here
+    return utils_menu('Retrieve entity', 'Retrieve entity details', 'Categorise entities by type', \
+                      'Categorise entities by gravity', 'Summarise entities by orbit')
 
 
 def entity_name():
@@ -115,6 +145,7 @@ def entity_name():
     :return: the name of an entity
     """
     # TODO: Your code here
+    return input("Please enter the name of the entity: ")
 
 
 def entity_details():
@@ -129,6 +160,23 @@ def entity_details():
     :return: A list containing the name of an entity and a list of column indexes
     """
     # TODO: Your code here
+    name = entity_name()
+    ind = []
+    print("Please enter a list of integer column indexes:\nTo stop type -1")
+    i = 0
+    while True:
+        try:
+            j = int(input(f"Please enter integer column index {i + 1}: "))
+            if j == -1:
+                break
+            elif j > -1:
+                ind.append(j)
+                i += 1
+            else:
+                raise Exception()
+        except:
+            print("Please enter a proper value")
+    return [name, ind]
 
 
 def list_entity(entity, cols=[]):
@@ -149,9 +197,10 @@ def list_entity(entity, cols=[]):
     :return: does not return anything
     """
     # TODO: Your code here
+    print([entity[i] for i in cols if i in range(len(entity))] if cols else entity)
 
 
-def list_entities():
+def list_entities(entities, cols=[]):
     """
     Task 11: Display each entity in entities. Only the data for the specified column indexes will be displayed.
     If no column indexes have been specified, then all the data for an entity will be displayed.
@@ -173,9 +222,11 @@ def list_entities():
     :return: Does not return anything
     """
     # TODO: Your code here
+    for entity in entities:
+        list_entity(entity, cols)
 
 
-def list_categories():
+def list_categories(categories):
     """
     Task 12: Display the contents of the dictionary categories.
 
@@ -188,7 +239,10 @@ def list_categories():
     :return: Does not return anything
     """
     # TODO: Your code here
-
+    for category in categories.keys():
+        # print(f"Category: {category}\n{list_entities(categories[category])}\n")
+        print(f"\nCategory: {category}")
+        list_entities(categories[category])
 
 def gravity_range():
     """
@@ -201,7 +255,16 @@ def gravity_range():
     :return: a tuple with the lower and upper limits
     """
     # TODO: Your code here
-
+    print("\nPlease the lower and upper limit for a range of gravity")
+    while True:
+        try:
+            lower = float(input("lower limit: "))
+            upper = float(input("upper limit: "))
+            if lower < 0 or upper < 0 or lower > upper:
+                raise Exception()
+            return lower, upper
+        except:
+            print("Please enter proper values")
 
 def orbits():
     """
@@ -215,7 +278,13 @@ def orbits():
     :return: a list of entity names
     """
     # TODO: Your code here
-
+    entity_names = []
+    print("\nPlease enter a list of entity names\nTo stop press enter\n")
+    while True:
+        entity_name = input("Enter entity name(s): ")
+        if not entity_name:
+            return entity_names
+        entity_names.extend([x.strip() for x in entity_name.split(",")])
 
 def visualise():
     """
@@ -233,7 +302,7 @@ def visualise():
     :return: None if an invalid selection is made otherwise an integer corresponding to a valid option
     """
     # TODO: Your code here
-
+    return utils_menu('Entities by type', 'Entities by gravity', 'Summary of orbits', 'Animate gravities')
 
 def save():
     """
@@ -250,3 +319,21 @@ def save():
     :return: None if an invalid selection is made otherwise an integer corresponding to a valid option
     """
     # TODO: Your code here
+    return utils_menu('Export as JSON')
+
+def run():
+    # welcome()
+    # print(menu())
+    # print(source_data_path())
+    # print(process_type())
+    # print(entity_details())
+    # list_entity(['Earth', True, 9.8])
+    # list_categories({"Hard": [['Earth', True, 9.8], ['Mars', True, 6.8]],
+    #                  "Soft": [['Jupiter', True, 40.8], ['Saturn', True, 20.8]]})
+    # print(gravity_range())
+    # print(orbits())
+    # print(visualise())
+    print(save())
+
+if __name__ == "__main__":
+    run()
