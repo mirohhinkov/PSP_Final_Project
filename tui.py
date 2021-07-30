@@ -1,17 +1,5 @@
 #!/usr/bin/python3.9
-def utils_menu(*menu_items):
-    for i in range(len(menu_items)):
-        print(f"{i + 1}: {menu_items[i]}")
-    try:
-        choice = int(input("Please select an option: "))
-        if choice - 1 in range(len(menu_items)):
-            return choice
-        raise Exception("Out of range")
-    except Exception as err:
-        if err.args[0] == "Out of range":
-            print(f"\n👇 Please, choose a number from 1 to {len(menu_items)}\n")
-        else:
-            print(f"\n💥 Invalid option.\n")
+from utils.menu import utils_menu
 
 
 def welcome():
@@ -46,7 +34,7 @@ def menu():
     :return: None if invalid selection otherwise an integer corresponding to a valid selection
     """
     # TODO: Your code here
-    return utils_menu('Load Data', 'Process Data', 'Visualise Data', 'Save Data', 'Exit')
+    return utils_menu(error, 'Load Data', 'Process Data', 'Visualise Data', 'Save Data', 'Exit')
 
 
 def started(operation):
@@ -61,7 +49,7 @@ def started(operation):
     :return: Does not return anything
     """
     # TODO: Your code here
-    print(f"{operation} has started.")
+    print(f"\n{operation} has started.")
 
 
 def completed(operation):
@@ -76,10 +64,10 @@ def completed(operation):
     :return: Does not return anything
     """
     # TODO: Your code here
-    print(f"{operation} has completed.")
+    print(f"\n{operation} has completed.\n")
 
 
-def error(error_msg):
+def error(error_msg, emoji="💥"):
     """
     Task 5: Display an error message.
 
@@ -87,11 +75,12 @@ def error(error_msg):
     'Error! {error_msg}.'
     Where {error_msg} is the value of the parameter passed to this function
 
+    :param emoji:
     :param error_msg: A string containing an error message
     :return: Does not return anything
     """
     # TODO: Your code here
-    print(f"Error! {error_msg}.")
+    print(f"\n{emoji} {error_msg}.\n")
 
 
 def source_data_path():
@@ -112,7 +101,7 @@ def source_data_path():
     if len(path_list) >= 2 and path_list[-1] == 'csv':
         return path
     else:
-        print("Please enter a proper file name (including path)")
+        error("Please enter a proper file name (including path)", "")
 
 
 def process_type():
@@ -176,7 +165,7 @@ def entity_details():
             else:
                 raise Exception()
         finally:
-            print("Please enter a proper value")
+            error("Please enter a proper value", "")
     return [name, ind]
 
 
@@ -241,7 +230,6 @@ def list_categories(categories):
     """
     # TODO: Your code here
     for category in categories:
-        # print(f"Category: {category}\n{list_entities(categories[category])}\n")
         print(f"\nCategory: {category}")
         list_entities(categories[category])
 
@@ -266,7 +254,7 @@ def gravity_range():
                 raise Exception()
             return lower, upper
         finally:
-            print("Please enter proper values")
+            error("Please enter proper values")
 
 
 def orbits():
@@ -282,7 +270,7 @@ def orbits():
     """
     # TODO: Your code here
     entity_names = []
-    print("\nPlease enter a list of entity names\nTo stop press enter\n")
+    print("\nPlease enter a list of entity names (one by one or comma separated)\nTo stop press enter\n")
     while True:
         ent_name = input("Enter entity name(s): ")
         if not ent_name:

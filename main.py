@@ -3,7 +3,7 @@
 import tui
 import os.path
 import csv
-
+import utils.process
 
 # Task 18: Create an empty list named 'records'.
 # This will be used to store the date read from the source data file.
@@ -13,6 +13,7 @@ records = []
 index_by_name = {}
 actions = ['Load Data', 'Process Data', 'Visualise Data', 'Save Data']
 funcs = ['load_data', 'process_data', 'visualise_data', 'save_data']
+
 header = []
 
 
@@ -21,8 +22,7 @@ def load_data():
         file_path = tui.source_data_path()
         if file_path and os.path.isfile(file_path):
             break
-        if file_path:
-            print(f"{file_path} does not exist. Please enter correct name.")
+        print(f"{file_path} does not exist. Please enter correct name." if file_path else "File have to be CSV")
     with open(file_path) as sol_data:
         data_reader = csv.reader(sol_data)
         ind = 0
@@ -36,7 +36,38 @@ def load_data():
 
 
 def process_data():
-    print('Process...')
+
+    if not header:
+        tui.error("Please load entity data first", "👆")
+        return False
+
+    def retrieve_entity():
+        utils.process.retrieve_entity(tui, records, index_by_name)
+
+    def entity_details():
+        utils.process.entity_details()
+
+    def entities_type():
+        utils.process.entities_type()
+
+    def entities_gravity():
+        utils.process.entities_gravity()
+
+    def entities_orbit():
+        utils.process.entities_orbit()
+
+    operation_actions = ['Retrieve entity', 'Retrieve entity details', 'Categorise entities by type',
+                         'Categorise entities by gravity', 'Summarise entities by orbit']
+    operation_funcs = ['retrieve_entity', 'entity_details', 'entities_type',
+                       'entities_gravity', 'entities_orbit']
+
+    while True:
+        menu_selection = tui.process_type()
+        if menu_selection:
+            break
+    tui.started(operation_actions[menu_selection - 1])
+    locals()[operation_funcs[menu_selection - 1]]()
+    tui.completed(operation_actions[menu_selection - 1])
 
 
 def visualise_data():
