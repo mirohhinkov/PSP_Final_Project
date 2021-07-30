@@ -1,3 +1,4 @@
+#!/usr/bin/python3.9
 def utils_menu(*menu_items):
     for i in range(len(menu_items)):
         print(f"{i + 1}: {menu_items[i]}")
@@ -8,9 +9,9 @@ def utils_menu(*menu_items):
         raise Exception("Out of range")
     except Exception as err:
         if err.args[0] == "Out of range":
-            print(f"Please, choose a number from 1 to {len(menu_items)}")
+            print(f"\n👇 Please, choose a number from 1 to {len(menu_items)}\n")
         else:
-            print(f"Invalid option.")
+            print(f"\n💥 Invalid option.\n")
 
 
 def welcome():
@@ -105,7 +106,7 @@ def source_data_path():
     :return: None if the file path does not end in 'csv' otherwise return the file path entered by the user
     """
     # TODO: Your code here
-    path = input("Please enter the file path for a data file: ").strip()
+    path = input("\nPlease enter the file path for a data file: ").strip()
 
     path_list = path.split(".")
     if len(path_list) >= 2 and path_list[-1] == 'csv':
@@ -131,7 +132,7 @@ def process_type():
     :return: None if an invalid selection made otherwise an integer corresponding to a valid option
     """
     # TODO: Your code here
-    return utils_menu('Retrieve entity', 'Retrieve entity details', 'Categorise entities by type', \
+    return utils_menu('Retrieve entity', 'Retrieve entity details', 'Categorise entities by type',
                       'Categorise entities by gravity', 'Summarise entities by orbit')
 
 
@@ -174,7 +175,7 @@ def entity_details():
                 i += 1
             else:
                 raise Exception()
-        except:
+        finally:
             print("Please enter a proper value")
     return [name, ind]
 
@@ -239,10 +240,11 @@ def list_categories(categories):
     :return: Does not return anything
     """
     # TODO: Your code here
-    for category in categories.keys():
+    for category in categories:
         # print(f"Category: {category}\n{list_entities(categories[category])}\n")
         print(f"\nCategory: {category}")
         list_entities(categories[category])
+
 
 def gravity_range():
     """
@@ -263,8 +265,9 @@ def gravity_range():
             if lower < 0 or upper < 0 or lower > upper:
                 raise Exception()
             return lower, upper
-        except:
+        finally:
             print("Please enter proper values")
+
 
 def orbits():
     """
@@ -281,10 +284,11 @@ def orbits():
     entity_names = []
     print("\nPlease enter a list of entity names\nTo stop press enter\n")
     while True:
-        entity_name = input("Enter entity name(s): ")
-        if not entity_name:
+        ent_name = input("Enter entity name(s): ")
+        if not ent_name:
             return entity_names
-        entity_names.extend([x.strip() for x in entity_name.split(",")])
+        entity_names.extend([x.strip() for x in ent_name.split(",")])
+
 
 def visualise():
     """
@@ -304,6 +308,7 @@ def visualise():
     # TODO: Your code here
     return utils_menu('Entities by type', 'Entities by gravity', 'Summary of orbits', 'Animate gravities')
 
+
 def save():
     """
     Task 16: Display a menu of options for how the data should be saved. Return the user's response.
@@ -321,19 +326,21 @@ def save():
     # TODO: Your code here
     return utils_menu('Export as JSON')
 
+
 def run():
     # welcome()
-    # print(menu())
+    print(menu())
     # print(source_data_path())
     # print(process_type())
     # print(entity_details())
     # list_entity(['Earth', True, 9.8])
-    # list_categories({"Hard": [['Earth', True, 9.8], ['Mars', True, 6.8]],
-    #                  "Soft": [['Jupiter', True, 40.8], ['Saturn', True, 20.8]]})
+    list_categories({"Hard": [['Earth', True, 9.8], ['Mars', True, 6.8]],
+                     "Soft": [['Jupiter', True, 40.8], ['Saturn', True, 20.8]]})
     # print(gravity_range())
     # print(orbits())
     # print(visualise())
-    print(save())
+    # print(save())
+
 
 if __name__ == "__main__":
     run()

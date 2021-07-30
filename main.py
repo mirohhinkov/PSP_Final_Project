@@ -1,38 +1,85 @@
 # Task 17: Import the modules csv, tui and visual
 # TODO: Your code here
+import tui
+import os.path
+import csv
+
 
 # Task 18: Create an empty list named 'records'.
 # This will be used to store the date read from the source data file.
 # TODO: Your code here
 
+records = []
+index_by_name = {}
+actions = ['Load Data', 'Process Data', 'Visualise Data', 'Save Data']
+funcs = ['load_data', 'process_data', 'visualise_data', 'save_data']
+header = []
+
+
+def load_data():
+    while True:
+        file_path = tui.source_data_path()
+        if file_path and os.path.isfile(file_path):
+            break
+        if file_path:
+            print(f"{file_path} does not exist. Please enter correct name.")
+    with open(file_path) as sol_data:
+        data_reader = csv.reader(sol_data)
+        ind = 0
+        for row in data_reader:
+            if not header:
+                header.extend(row)
+            else:
+                records.append(row)
+                index_by_name[row[0]] = ind
+                ind += 1
+
+
+def process_data():
+    print('Process...')
+
+
+def visualise_data():
+    print('Visualise...')
+
+
+def save_data():
+    print('Saving...')
 
 
 def run():
-    print("Hello")
     # Task 19: Call the function welcome of the module tui.
     # This will display our welcome message when the program is executed.
     # TODO: Your code here
+    tui.welcome()
+    while True:
+        # Task 20: Using the appropriate function in the module tui, display a menu of options
+        # for the different operations that can be performed on the data.
+        # Assign the selected option to a suitable local variable
+        # TODO: Your code here
+        menu_selection = tui.menu()
+        if menu_selection:
+            if menu_selection == 5:
+                break
+            else:
+                tui.started(actions[menu_selection - 1])
+                globals()[funcs[menu_selection - 1]]()
+                tui.completed(actions[menu_selection - 1])
 
-    # while True:
-    # Task 20: Using the appropriate function in the module tui, display a menu of options
-    # for the different operations that can be performed on the data.
-    # Assign the selected option to a suitable local variable
-    # TODO: Your code here
-
-    # Task 21: Check if the user selected the option for loading data.  If so, then do the following:
-    # - Use the appropriate function in the module tui to display a message to indicate that the data loading
-    # operation has started.
-    # - Load the data (see below).
-    # - Use the appropriate function in the module tui to display a message to indicate that the data loading
-    # operation has completed.
-    #
-    # To load the data, it is recommended that you create and call one or more separate functions that do the
-    # following:
-    # - Use the appropriate function in the module tui to retrieve a file path for the CSV data file.  You
-    # should appropriately handle the case where this is None.
-    # - Read each line from the CSV file and add it to the list 'records'. You should appropriately handle the case
-    # where the file cannot be found
-    # TODO: Your code here
+        # Task 21: Check if the user selected the option for loading data.  If so, then do the following:
+        # - Use the appropriate function in the module tui to display a message to indicate that the data loading
+        # operation has started.
+        # - Load the data (see below).
+        # - Use the appropriate function in the module tui to display a message to indicate that the data loading
+        # operation has completed.
+        #
+        # To load the data, it is recommended that you create and call one or more separate functions that do the
+        # following:
+        # - Use the appropriate function in the module tui to retrieve a file path for the CSV data file.  You
+        # should appropriately handle the case where this is None.
+        # - Read each line from the CSV file and add it to the list 'records'. You should appropriately handle the case
+        # where the file cannot be found
+        # TODO: Your code here
 
     # Task 22: Check if the user selected the option for processing data.  If so, then do the following:
     # - Use the appropriate function in the module tui to display a message to indicate that the data processing
