@@ -1,5 +1,6 @@
 #!/usr/bin/python3.9
 from utils.menu import utils_menu
+import re
 
 
 def welcome():
@@ -64,7 +65,7 @@ def completed(operation):
     :return: Does not return anything
     """
     # TODO: Your code here
-    print(f"\n{operation} has completed.\n")
+    print(f"\n{operation} has completed.")
 
 
 def error(error_msg, emoji="💥"):
@@ -95,10 +96,15 @@ def source_data_path():
     :return: None if the file path does not end in 'csv' otherwise return the file path entered by the user
     """
     # TODO: Your code here
-    path = input("\nPlease enter the file path for a data file: ").strip()
+    path = input("\nPlease enter the file path for a data file\nFor default file - data/sol_data.csv - press enter: ") \
+        .strip() \
+        .replace('\\', '/')
+
+    if not path:
+        return 'data/sol_data.csv'
 
     path_list = path.split(".")
-    if len(path_list) >= 2 and path_list[-1] == 'csv':
+    if len(path_list) >= 2 and path_list[-1].lower() == 'csv':
         return path
     else:
         error("Please enter a proper file name (including path)", "")
@@ -121,11 +127,11 @@ def process_type():
     :return: None if an invalid selection made otherwise an integer corresponding to a valid option
     """
     # TODO: Your code here
-    return utils_menu('Retrieve entity', 'Retrieve entity details', 'Categorise entities by type',
+    return utils_menu(error, 'Retrieve entity', 'Retrieve entity details', 'Categorise entities by type',
                       'Categorise entities by gravity', 'Summarise entities by orbit')
 
 
-def entity_name():
+def entity_name(msg='Please enter the name of the entity: '):
     """
     Task 8: Read in the name of an entity and return the name.
 
@@ -135,10 +141,10 @@ def entity_name():
     :return: the name of an entity
     """
     # TODO: Your code here
-    return input("Please enter the name of the entity: ")
+    return input(msg).strip().capitalize()
 
 
-def entity_details():
+def entity_details(header):
     """
     Task 9: Read in the name of an entity and column indexes. Return a list containing the name and indexes.
 
@@ -152,20 +158,20 @@ def entity_details():
     # TODO: Your code here
     name = entity_name()
     ind = []
-    print("Please enter a list of integer column indexes:\nTo stop type -1")
-    i = 0
+    print("Please enter a list of integer column indexes or names:\nTo stop press Enter")
     while True:
-        try:
-            j = int(input(f"Please enter integer column index {i + 1}: "))
-            if j == -1:
-                break
-            elif j > -1:
-                ind.append(j)
-                i += 1
-            else:
-                raise Exception()
-        finally:
-            error("Please enter a proper value", "")
+        user_input = input("index or name: ")
+        if not user_input:
+            break
+        if user_input.isnumeric():
+            _ = int(user_input)
+            to_add = _ if 0 < _ < len(header) else 0
+        else:
+            to_add = header.index(user_input) if user_input in header else 0
+        if to_add and to_add not in ind:
+            ind.append(to_add)
+        else:
+            error("It's already there" if ind else "Please enter a proper value", "")
     return [name, ind]
 
 
@@ -230,8 +236,9 @@ def list_categories(categories):
     """
     # TODO: Your code here
     for category in categories:
-        print(f"\nCategory: {category}")
-        list_entities(categories[category])
+        if len(categories[category]):
+            print(f"\nCategory: {category}")
+            list_entities(categories[category])
 
 
 def gravity_range():
@@ -253,7 +260,7 @@ def gravity_range():
             if lower < 0 or upper < 0 or lower > upper:
                 raise Exception()
             return lower, upper
-        finally:
+        except:
             error("Please enter proper values")
 
 
@@ -272,10 +279,10 @@ def orbits():
     entity_names = []
     print("\nPlease enter a list of entity names (one by one or comma separated)\nTo stop press enter\n")
     while True:
-        ent_name = input("Enter entity name(s): ")
+        ent_name = entity_name("Enter entity name(s): ")
         if not ent_name:
             return entity_names
-        entity_names.extend([x.strip() for x in ent_name.split(",")])
+        entity_names.extend([x.strip().capitalize() for x in ent_name.split(",")])
 
 
 def visualise():
@@ -294,7 +301,7 @@ def visualise():
     :return: None if an invalid selection is made otherwise an integer corresponding to a valid option
     """
     # TODO: Your code here
-    return utils_menu('Entities by type', 'Entities by gravity', 'Summary of orbits', 'Animate gravities')
+    return utils_menu(error, 'Entities by type', 'Entities by gravity', 'Summary of orbits', 'Animate gravities')
 
 
 def save():
@@ -312,22 +319,25 @@ def save():
     :return: None if an invalid selection is made otherwise an integer corresponding to a valid option
     """
     # TODO: Your code here
-    return utils_menu('Export as JSON')
+    return utils_menu(error, 'Export as JSON')
 
 
 def run():
     # welcome()
-    print(menu())
+    # print(menu())
     # print(source_data_path())
-    # print(process_type())
-    # print(entity_details())
+    print(process_type())
+    # print(entity_details(['', 'gravity', 'velocity', 'radius', 'weight', 'distance']))
     # list_entity(['Earth', True, 9.8])
-    list_categories({"Hard": [['Earth', True, 9.8], ['Mars', True, 6.8]],
-                     "Soft": [['Jupiter', True, 40.8], ['Saturn', True, 20.8]]})
+    # list_categories({"Hard": [['Earth', True, 9.8], ['Mars', True, 6.8]],
+    #                  "Soft": [['Jupiter', True, 40.8], ['Saturn', True, 20.8]]})
     # print(gravity_range())
     # print(orbits())
     # print(visualise())
     # print(save())
+
+def is_number(input_str):
+    return input_str.isnumeric or re.match(r'^\d*\.\d*$', input_str) is not None
 
 
 if __name__ == "__main__":

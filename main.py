@@ -29,37 +29,38 @@ def load_data():
         for row in data_reader:
             if not header:
                 header.extend(row)
+                entity_name_index = header.index('eName')
             else:
                 records.append(row)
-                index_by_name[row[0]] = ind
+                index_by_name[row[entity_name_index]] = ind
                 ind += 1
 
 
 def process_data():
-
+    tui.started("Data processing")
     if not header:
         tui.error("Please load entity data first", "👆")
         return False
 
-    def retrieve_entity():
+    def retrieve():
         utils.process.retrieve_entity(tui, records, index_by_name)
 
-    def entity_details():
-        utils.process.entity_details()
+    def details():
+        utils.process.entity_details(tui, header, records, index_by_name)
 
-    def entities_type():
-        utils.process.entities_type()
+    def category():
+        utils.process.entities_category(tui, header, records)
 
-    def entities_gravity():
-        utils.process.entities_gravity()
+    def gravity():
+        utils.process.entities_gravity(tui, header, records)
 
-    def entities_orbit():
-        utils.process.entities_orbit()
+    def orbit():
+        utils.process.entities_orbit(tui, header, records, index_by_name)
 
     operation_actions = ['Retrieve entity', 'Retrieve entity details', 'Categorise entities by type',
                          'Categorise entities by gravity', 'Summarise entities by orbit']
-    operation_funcs = ['retrieve_entity', 'entity_details', 'entities_type',
-                       'entities_gravity', 'entities_orbit']
+    operation_funcs = ['retrieve', 'details', 'category',
+                       'gravity', 'orbit']
 
     while True:
         menu_selection = tui.process_type()
@@ -68,6 +69,8 @@ def process_data():
     tui.started(operation_actions[menu_selection - 1])
     locals()[operation_funcs[menu_selection - 1]]()
     tui.completed(operation_actions[menu_selection - 1])
+
+    tui.completed("Data processing")
 
 
 def visualise_data():
