@@ -25,16 +25,23 @@ def load_data():
         print(f"{file_path} does not exist. Please enter correct name." if file_path else "File have to be CSV")
     with open(file_path) as sol_data:
         data_reader = csv.reader(sol_data)
-        ind = 0
-        for row in data_reader:
-            if not header:
+        for ind, row in enumerate(data_reader):
+            if ind:
+                records.append(row)
+                index_by_name[row[entity_name_index]] = ind - 1
+            else:
                 header.extend(row)
                 entity_name_index = header.index('eName')
-            else:
-                records.append(row)
-                index_by_name[row[entity_name_index]] = ind
-                ind += 1
-
+        # ind = 0
+        # for row in data_reader:
+        #     if not header:
+        #         header.extend(row)
+        #         entity_name_index = header.index('eName')
+        #     else:
+        #         records.append(row)
+        #         index_by_name[row[entity_name_index]] = ind
+        #         ind += 1
+    tui.print_gl()
 
 def process_data():
     tui.started("Data processing")

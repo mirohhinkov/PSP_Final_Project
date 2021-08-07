@@ -322,6 +322,15 @@ def save():
     return utils_menu(error, 'Export as JSON')
 
 
+def is_number(user_input):
+    return user_input.isnumeric or re.match(r'^\d*\.\d*$', user_input) is not None
+
+
+def print_gl():
+    for k in globals():
+        print(f'{k}')
+
+
 def run():
     # welcome()
     # print(menu())
@@ -335,9 +344,6 @@ def run():
     # print(orbits())
     # print(visualise())
     # print(save())
-
-def is_number(input_str):
-    return input_str.isnumeric or re.match(r'^\d*\.\d*$', input_str) is not None
 
 
 if __name__ == "__main__":
