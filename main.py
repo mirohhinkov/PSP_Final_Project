@@ -41,7 +41,7 @@ def load_data():
         #         records.append(row)
         #         index_by_name[row[entity_name_index]] = ind
         #         ind += 1
-    tui.print_gl()
+
 
 def process_data():
     tui.started("Data processing")

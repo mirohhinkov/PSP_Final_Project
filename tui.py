@@ -15,7 +15,7 @@ def welcome():
     """
     # TODO: Your code here
     welcome_msg = "Solar Record Management System"
-    welcome_list = ['*' * len(welcome_msg), welcome_msg, '*' * len(welcome_msg)]
+    welcome_list = ['-' * len(welcome_msg), welcome_msg, '-' * len(welcome_msg)]
     print(*welcome_list)
 
 
@@ -164,8 +164,8 @@ def entity_details(header):
         if not user_input:
             break
         if user_input.isnumeric():
-            _ = int(user_input)
-            to_add = _ if 0 < _ < len(header) else 0
+            choice = int(user_input)
+            to_add = choice if 0 < choice < len(header) else 0
         else:
             to_add = header.index(user_input) if user_input in header else 0
         if to_add and to_add not in ind:
@@ -193,7 +193,7 @@ def list_entity(entity, cols=[]):
     :return: does not return anything
     """
     # TODO: Your code here
-    print([entity[i] for i in cols if i in range(len(entity))] if cols else entity)
+    print([entity[i] for i in cols] if cols else entity)
 
 
 def list_entities(entities, cols=[]):
@@ -253,15 +253,30 @@ def gravity_range():
     """
     # TODO: Your code here
     print("\nPlease the lower and upper limit for a range of gravity")
-    while True:
-        try:
-            lower = float(input("lower limit: "))
-            upper = float(input("upper limit: "))
-            if lower < 0 or upper < 0 or lower > upper:
-                raise Exception()
-            return lower, upper
-        except:
-            error("Please enter proper values")
+    lower = input_numb("lower limit: ")
+    upper = input_numb("upper limit: ")
+    return (lower, upper) if lower < upper else (upper, lower)
+    # while True:
+    #     lower = input("lower limit: ")
+    #     upper = None
+    #     print(is_numb(lower))
+    #     if is_numb(lower):
+    #         float(lower)
+    #         upper = input("upper limit: ")
+    #         if is_numb(upper):
+    #             float(upper)
+    #     if type(upper) is float:
+    #         return lower, upper
+    #     error("Please enter proper values")
+    # ---------------------------------
+    #   try:
+    #       lower = float(input("lower limit: "))
+    #       upper = float(input("upper limit: "))
+    #       if lower < 0 or upper < 0 or lower > upper:
+    #           raise Exception()
+    #       return lower, upper
+    #   except:
+    #       error("Please enter proper values")
 
 
 def orbits():
@@ -322,25 +337,28 @@ def save():
     return utils_menu(error, 'Export as JSON')
 
 
-def is_number(user_input):
-    return user_input.isnumeric or re.match(r'^\d*\.\d*$', user_input) is not None
+def is_numb(user_input):
+    return user_input.isnumeric() or re.match(r'^\d*\.\d*$', user_input) is not None
 
 
-def print_gl():
-    for k in globals():
-        print(f'{k}')
+def input_numb(msg=''):
+    while True:
+        numb = input(msg).strip()
+        if is_numb(numb):
+            return float(numb)
+        error("Please enter proper values")
 
 
 def run():
     # welcome()
     # print(menu())
     # print(source_data_path())
-    print(process_type())
+    # print(process_type())
     # print(entity_details(['', 'gravity', 'velocity', 'radius', 'weight', 'distance']))
     # list_entity(['Earth', True, 9.8])
     # list_categories({"Hard": [['Earth', True, 9.8], ['Mars', True, 6.8]],
     #                  "Soft": [['Jupiter', True, 40.8], ['Saturn', True, 20.8]]})
-    # print(gravity_range())
+    print(gravity_range())
     # print(orbits())
     # print(visualise())
     # print(save())
