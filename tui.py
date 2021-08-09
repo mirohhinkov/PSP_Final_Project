@@ -193,7 +193,8 @@ def list_entity(entity, cols=[]):
     :return: does not return anything
     """
     # TODO: Your code here
-    print([entity[i] for i in cols] if cols else entity)
+    to_print = ["{0:<10}".format(entity[i]) for i in cols] if cols else ["{:<10}".format(x) for x in entity]
+    print(*to_print)
 
 
 def list_entities(entities, cols=[]):
