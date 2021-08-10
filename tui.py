@@ -1,6 +1,7 @@
 #!/usr/bin/python3.9
 from utils.menu import utils_menu
 import re
+import os
 
 
 def welcome():
@@ -14,9 +15,12 @@ def welcome():
     :return: Does not return anything.
     """
     # TODO: Your code here
-    welcome_msg = "Solar Record Management System"
-    welcome_list = ['-' * len(welcome_msg), welcome_msg, '-' * len(welcome_msg)]
-    print(*welcome_list)
+    welcome_msg = " Solar Record Management System "
+    try:
+        size = os.get_terminal_size().columns
+    except (AttributeError, ValueError, OSError):
+        size = 80
+    print(welcome_msg.center(size, '-'))
 
 
 def menu():
