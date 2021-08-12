@@ -1,4 +1,14 @@
-def find_by_name_print(tui, records, index_by_name, name, cols=None):
+tui = header = records = index_by_name = None
+
+
+def share_data(*data):
+    globals()['tui'] = data[0]
+    globals()['header'] = data[1]
+    globals()['records'] = data[2]
+    globals()['index_by_name'] = data[3]
+
+
+def find_by_name_print(name, cols=None):
     if cols is None:
         cols = []
     if name in index_by_name:
@@ -7,18 +17,18 @@ def find_by_name_print(tui, records, index_by_name, name, cols=None):
         tui.error(f"Entity with name {name} not found!", "👽")
 
 
-def retrieve_entity(tui, records, index_by_name):
+def retrieve_entity():
     name = tui.entity_name()
-    find_by_name_print(tui, records, index_by_name, name)
+    find_by_name_print(name)
 
 
-def entity_details(tui, header, records, index_by_name):
-    name, cols = tui.entity_details(header)
+def entity_details():
+    name, cols = tui.entity_details()
     cols = [0, *cols] if cols else []
-    find_by_name_print(tui, records, index_by_name, name, cols)
+    find_by_name_print(name, cols)
 
 
-def entities_category(tui, header, records):
+def entities_category():
     ind = header.index('isPlanet')
     planets = []
     non_planet = []
@@ -30,7 +40,7 @@ def entities_category(tui, header, records):
     tui.list_categories({"Planets": planets, "Non-planets": non_planet})
 
 
-def entities_gravity(tui, header, records):
+def entities_gravity():
     low = []
     medium = []
     high = []
@@ -48,7 +58,7 @@ def entities_gravity(tui, header, records):
                          "High gravity": high})
 
 
-def entities_orbit(tui, header, records, index_by_name):
+def entities_orbit():
     ind_orbits = header.index('orbits')
     ind_radius = header.index('meanRadius')
     inputs = tui.orbits()

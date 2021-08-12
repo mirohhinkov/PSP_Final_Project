@@ -3,6 +3,8 @@ from utils.menu import utils_menu
 import re
 import os
 
+header = None
+
 
 def welcome():
     """
@@ -148,7 +150,7 @@ def entity_name(msg='Please enter the name of the entity: '):
     return input(msg).strip().capitalize()
 
 
-def entity_details(header):
+def entity_details():
     """
     Task 9: Read in the name of an entity and column indexes. Return a list containing the name and indexes.
 
@@ -352,6 +354,10 @@ def input_numb(msg=''):
         if is_numb(numb):
             return float(numb)
         error("Please enter proper values")
+
+
+def share_header(h):
+    globals()['header'] = h
 
 
 def run():

@@ -1,8 +1,10 @@
 # Task 17: Import the modules csv, tui and visual
 # TODO: Your code here
-import tui
+
 import os.path
 import csv
+
+import tui
 import utils.process
 
 # Task 18: Create an empty list named 'records'.
@@ -49,20 +51,23 @@ def process_data():
         tui.error("Please load entity data first", "👆")
         return False
 
+    utils.process.share_data(tui, header, records, index_by_name)
+
     def retrieve():
-        utils.process.retrieve_entity(tui, records, index_by_name)
+        utils.process.retrieve_entity()
 
     def details():
-        utils.process.entity_details(tui, header, records, index_by_name)
+        tui.share_header(header)
+        utils.process.entity_details()
 
     def category():
-        utils.process.entities_category(tui, header, records)
+        utils.process.entities_category()
 
     def gravity():
-        utils.process.entities_gravity(tui, header, records)
+        utils.process.entities_gravity()
 
     def orbit():
-        utils.process.entities_orbit(tui, header, records, index_by_name)
+        utils.process.entities_orbit()
 
     operation_actions = ['Retrieve entity', 'Retrieve entity details', 'Categorise entities by type',
                          'Categorise entities by gravity', 'Summarise entities by orbit']
