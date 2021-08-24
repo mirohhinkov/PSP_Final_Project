@@ -2,10 +2,8 @@ tui = header = records = index_by_name = None
 
 
 def share_data(*data):
-    globals()['tui'] = data[0]
-    globals()['header'] = data[1]
-    globals()['records'] = data[2]
-    globals()['index_by_name'] = data[3]
+    global tui, header, records, index_by_name
+    tui, header, records, index_by_name = data
 
 
 def find_by_name_print(name, cols=None):

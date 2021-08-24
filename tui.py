@@ -22,7 +22,8 @@ def welcome():
         size = os.get_terminal_size().columns
     except (AttributeError, ValueError, OSError):
         size = 80
-    print(welcome_msg.center(size, '-'))
+    print(f"")
+    # print(welcome_msg.center(size, '-'))
 
 
 def menu():
@@ -357,7 +358,8 @@ def input_numb(msg=''):
 
 
 def share_header(h):
-    globals()['header'] = h
+    global header
+    header = h
 
 
 def run():

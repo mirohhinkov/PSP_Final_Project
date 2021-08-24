@@ -19,6 +19,18 @@ funcs = ['load_data', 'process_data', 'visualise_data', 'save_data']
 header = []
 
 
+def start_complete_decorator(action):
+    def wrapper(f):
+        def wrapped_f():
+            tui.started(action)
+            f()
+            tui.completed(action)
+        return wrapped_f
+    return wrapper
+
+
+
+@start_complete_decorator(actions[0])
 def load_data():
     while True:
         file_path = tui.source_data_path()
@@ -27,13 +39,14 @@ def load_data():
         print(f"{file_path} does not exist. Please enter correct name." if file_path else "File have to be CSV")
     with open(file_path) as sol_data:
         data_reader = csv.reader(sol_data)
+        header.extend(next(data_reader))
+        entity_name_index = header.index('eName')
         for ind, row in enumerate(data_reader):
-            if ind:
-                records.append(row)
-                index_by_name[row[entity_name_index]] = ind - 1
-            else:
-                header.extend(row)
-                entity_name_index = header.index('eName')
+            records.append(row)
+            index_by_name[row[entity_name_index]] = ind
+
+
+        #the same result - manually handling the index
         # ind = 0
         # for row in data_reader:
         #     if not header:
@@ -45,50 +58,55 @@ def load_data():
         #         ind += 1
 
 
+@start_complete_decorator(actions[1])
 def process_data():
-    tui.started("Data processing")
     if not header:
         tui.error("Please load entity data first", "👆")
         return False
 
-    utils.process.share_data(tui, header, records, index_by_name)
-
-    def retrieve():
-        utils.process.retrieve_entity()
-
-    def details():
-        tui.share_header(header)
-        utils.process.entity_details()
-
-    def category():
-        utils.process.entities_category()
-
-    def gravity():
-        utils.process.entities_gravity()
-
-    def orbit():
-        utils.process.entities_orbit()
+    utils.process.share_data(tui, header, records, index_by_name)  # gives access to vars in process module
+    tui.share_header(header)  # gives access of header in tui
 
     operation_actions = ['Retrieve entity', 'Retrieve entity details', 'Categorise entities by type',
                          'Categorise entities by gravity', 'Summarise entities by orbit']
     operation_funcs = ['retrieve', 'details', 'category',
                        'gravity', 'orbit']
 
+    @start_complete_decorator(operation_actions[0])
+    def retrieve():
+        utils.process.retrieve_entity()
+
+    @start_complete_decorator(operation_actions[1])
+    def details():
+        utils.process.entity_details()
+
+    @start_complete_decorator(operation_actions[2])
+    def category():
+        utils.process.entities_category()
+
+    @start_complete_decorator(operation_actions[3])
+    def gravity():
+        utils.process.entities_gravity()
+
+    @start_complete_decorator(operation_actions[4])
+    def orbit():
+        utils.process.entities_orbit()
+
     while True:
         menu_selection = tui.process_type()
         if menu_selection:
             break
-    tui.started(operation_actions[menu_selection - 1])
+    # tui.started(operation_actions[menu_selection - 1])
     locals()[operation_funcs[menu_selection - 1]]()
-    tui.completed(operation_actions[menu_selection - 1])
-
-    tui.completed("Data processing")
+    # tui.completed(operation_actions[menu_selection - 1])
 
 
+@start_complete_decorator(actions[2])
 def visualise_data():
     print('Visualise...')
 
 
+@start_complete_decorator(actions[3])
 def save_data():
     print('Saving...')
 
@@ -108,9 +126,7 @@ def run():
             if menu_selection == 5:
                 break
             else:
-                tui.started(actions[menu_selection - 1])
                 globals()[funcs[menu_selection - 1]]()
-                tui.completed(actions[menu_selection - 1])
 
         # Task 21: Check if the user selected the option for loading data.  If so, then do the following:
         # - Use the appropriate function in the module tui to display a message to indicate that the data loading
