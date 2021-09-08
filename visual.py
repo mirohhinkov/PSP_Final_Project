@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+import tui
+import utils.process
 
 
 
@@ -11,7 +13,8 @@ def entities_pie(categories):
     :param categories: A dictionary with planets and non-planets
     :return: Does not return anything
     """
-
+    print('Pie')
+    print(categories)
 
 def entities_bar(categories):
     """
@@ -22,7 +25,8 @@ def entities_bar(categories):
     :param categories: A dictionary with entities categorised into 'low', 'medium' and 'high' gravity
     :return: Does not return anything
     """
-
+    print('bar')
+    print(categories)
 
 def orbits(summary):
     """
@@ -42,7 +46,8 @@ def orbits(summary):
     :param summary: A dictionary containing the "small" and "large" entities for each orbited planet.
     :return: Does not return anything
     """
-
+    print('Orbits')
+    print(summary)
 
 def gravity_animation(categories):
     """
@@ -54,4 +59,5 @@ def gravity_animation(categories):
     :param categories: A dictionary containing "low", "medium" and "high" gravity entities
     :return: Does not return anything
     """
-
+    print('Gravity animation')
+    print(categories)

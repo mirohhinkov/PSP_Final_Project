@@ -22,11 +22,12 @@ def retrieve_entity():
 
 def entity_details():
     name, cols = tui.entity_details()
+    # includes entity name as first field if fields exists else all fields to be printed
     cols = [0, *cols] if cols else []
     find_by_name_print(name, cols)
 
 
-def entities_category():
+def entities_category(screen=True):
     ind = header.index('isPlanet')
     planets = []
     non_planet = []
@@ -35,10 +36,13 @@ def entities_category():
             planets.append(entity)
         else:
             non_planet.append(entity)
-    tui.list_categories({"Planets": planets, "Non-planets": non_planet})
+    result = {"Planets": planets, "Non-planets": non_planet}
+    if screen:
+        tui.list_categories(result)
+    return result
 
 
-def entities_gravity():
+def entities_gravity(screen=True):
     low = []
     medium = []
     high = []
@@ -51,21 +55,31 @@ def entities_gravity():
             high.append(entity)
         else:
             medium.append(entity)
-    tui.list_categories({"Low gravity": low,
-                         "Medium gravity": medium,
-                         "High gravity": high})
+    result = {"Low gravity": low,
+              "Medium gravity": medium,
+              "High gravity": high}
+    if screen:
+        tui.list_categories(result)
+    return result
 
 
-def entities_orbit():
+def entities_orbit(screen=True):
     ind_orbits = header.index('orbits')
     ind_radius = header.index('meanRadius')
     inputs = tui.orbits()
+    # filters only planets from the input list (check if is an entity and if an entity if is a planet)
     planets = [x for x in inputs if x in index_by_name and records[index_by_name[x]][ind_orbits] == 'NA']
+    # creates empty dict
+    print(planets)
     orbits = {planet: {'small': [], 'large': []} for planet in planets}
+
     for entity in records:
         if entity[ind_orbits] in planets:  # checks if the entity orbits around one of the selected planets
             s_l = 'small' if float(entity[ind_radius]) < 100.0 else 'large'  # select the category of the entity
             orbits[entity[ind_orbits]][s_l].append(entity)
-    for planet in planets:
-        print(f"\n{planet} orbits:")
-        tui.list_categories(orbits[planet])
+    print(orbits)
+    if screen:
+        for planet in planets:
+            print(f"\n{planet} orbits:")
+            tui.list_categories(orbits[planet])
+    return orbits

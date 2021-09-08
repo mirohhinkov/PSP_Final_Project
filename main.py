@@ -6,6 +6,7 @@ import csv
 
 import tui
 import utils.process
+import visual
 
 # Task 18: Create an empty list named 'records'.
 # This will be used to store the date read from the source data file.
@@ -96,15 +97,42 @@ def process_data():
         menu_selection = tui.process_type()
         if menu_selection:
             break
-    # tui.started(operation_actions[menu_selection - 1])
     locals()[operation_funcs[menu_selection - 1]]()
-    # tui.completed(operation_actions[menu_selection - 1])
 
 
 @start_complete_decorator(actions[2])
 def visualise_data():
-    print('Visualise...')
+    if not header:
+        tui.error("Please load entity data first", "👆")
+        return False
 
+    utils.process.share_data(tui, header, records, index_by_name)  # gives access to vars in process module
+    tui.share_header(header)  # gives access of header in tui
+
+    operation_actions = ['Entities by type', 'Entities by gravity', 'Summary of orbits', 'Animate gravities']
+    operation_funcs = ['pie', 'bar', 'orbits', 'gravity']
+
+    @start_complete_decorator(operation_actions[0])
+    def pie():
+        visual.entities_pie(utils.process.entities_category(False))
+
+    @start_complete_decorator(operation_actions[1])
+    def bar():
+        visual.entities_bar(utils.process.entities_gravity(False))
+
+    @start_complete_decorator(operation_actions[2])
+    def orbits():
+        visual.orbits(utils.process.entities_orbit(False))
+
+    @start_complete_decorator(operation_actions[3])
+    def gravity():
+        visual.gravity_animation(utils.process.entities_gravity(False))
+
+    while True:
+        menu_selection = tui.visualise()
+        if menu_selection:
+            break
+    locals()[operation_funcs[menu_selection - 1]]()
 
 @start_complete_decorator(actions[3])
 def save_data():
