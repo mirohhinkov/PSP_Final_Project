@@ -13,8 +13,26 @@ def entities_pie(categories):
     :param categories: A dictionary with planets and non-planets
     :return: Does not return anything
     """
-    print('Pie')
+
+    def in_the_pie(x):
+        print(x)
+        return '{:.4f}%\n({:.0f})'.format(x, entities * x / 100)
+    entities = 0
+    pie_labels = []
+    y = []
+    for cat in categories:
+        entities += len(categories[cat])
+        y.append(len(categories[cat]))
+        pie_labels.append(cat)
+    planet_explode = [0.4, 0]
+    plt.title("Planets and Non-Planets Objects")
+    plt.pie(y, labels=pie_labels, explode=planet_explode, autopct=in_the_pie, shadow=True)
+    # plt.show()
+    # input("Press Enter to continue")
+    # plt.close()
+    plt.savefig('./img/pie.png')
     print(categories)
+
 
 def entities_bar(categories):
     """
@@ -27,6 +45,7 @@ def entities_bar(categories):
     """
     print('bar')
     print(categories)
+
 
 def orbits(summary):
     """
@@ -48,6 +67,7 @@ def orbits(summary):
     """
     print('Orbits')
     print(summary)
+
 
 def gravity_animation(categories):
     """
