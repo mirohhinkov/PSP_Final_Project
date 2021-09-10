@@ -15,7 +15,7 @@ def entities_pie(categories):
     """
 
     def in_the_pie(x):
-        print(x)
+        # print(x)
         return '{:.4f}%\n({:.0f})'.format(x, entities * x / 100)
     entities = 0
     pie_labels = []
@@ -31,7 +31,6 @@ def entities_pie(categories):
     # input("Press Enter to continue")
     # plt.close()
     plt.savefig('./img/pie.png')
-    print(categories)
 
 
 def entities_bar(categories):
@@ -43,8 +42,20 @@ def entities_bar(categories):
     :param categories: A dictionary with entities categorised into 'low', 'medium' and 'high' gravity
     :return: Does not return anything
     """
-    print('bar')
-    print(categories)
+    x = []
+    y = []
+    for cat in categories:
+        x.append(cat)
+        y.append(len(categories[cat]))
+    plt.title(f"Entities sorted by gravity")
+    plt.xlabel("Gravity type")
+    plt.ylabel("Number of entities")
+    plt.bar(x, y)
+    # plt.show()
+    # input("Press Enter to continue")
+    # plt.close()
+
+    plt.savefig('./img/bar.png')
 
 
 def orbits(summary):
