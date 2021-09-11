@@ -42,6 +42,7 @@ def entities_bar(categories):
     :param categories: A dictionary with entities categorised into 'low', 'medium' and 'high' gravity
     :return: Does not return anything
     """
+    fig, ax = plt.subplots()
     x = []
     y = []
     for cat in categories:
@@ -50,7 +51,17 @@ def entities_bar(categories):
     plt.title(f"Entities sorted by gravity")
     plt.xlabel("Gravity type")
     plt.ylabel("Number of entities")
-    plt.bar(x, y)
+    bar_list = plt.bar(x, y, color='yrg')
+    # bar_list[1].set_color('r')
+    # bar_list[2].set_color('g')
+
+    for i, rect in enumerate(bar_list):
+        height = rect.get_height()
+        ax.text(rect.get_x() + rect.get_width() / 2., (0.95 if y[i] > 50 else 1.1) * height,
+                y[i],
+                ha='center', va='bottom', rotation=0)
+
+
     # plt.show()
     # input("Press Enter to continue")
     # plt.close()
