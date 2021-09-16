@@ -133,10 +133,12 @@ def gravity_animation(categories):
     y_anim = []
 
     def a_frames(i):
+
         def my_func(fr):
             w = fr - int(fr)
             ind = 0 if fr <= 2 else 1
             return (1-w) * y[ind] + w * y[ind + 1]
+
         x_anim.append(i)
         y_anim.append(my_func(i))
 
@@ -146,6 +148,3 @@ def gravity_animation(categories):
 
     animation = FuncAnimation(fig, func=a_frames, frames=np.arange(1, 3, 0.1), interval=100)
     animation.save('./img/anim.gif')
-
-    print('Gravity animation')
-    print(categories)

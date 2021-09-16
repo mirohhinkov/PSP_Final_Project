@@ -7,6 +7,7 @@ import csv
 import tui
 import utils.process
 import visual
+from utils.writer import JSON_writer
 
 # Task 18: Create an empty list named 'records'.
 # This will be used to store the date read from the source data file.
@@ -29,6 +30,14 @@ def start_complete_decorator(action):
         return wrapped_f
     return wrapper
 
+def chech_data_loaded():
+    if not header:
+        tui.error("Please load entity data first", "👆")
+        return False
+
+    utils.process.share_data(tui, header, records, index_by_name)  # gives access to vars in process module
+    tui.share_header(header)  # gives access of header in tui
+    return True
 
 
 @start_complete_decorator(actions[0])
@@ -44,29 +53,19 @@ def load_data():
         entity_name_index = header.index('eName')
         for ind, row in enumerate(data_reader):
             records.append(row)
+            """
+            index_by_name - dictionary for fast searching in records by entity name
+            key - entity name
+            value - index of the entity in records
+            """
             index_by_name[row[entity_name_index]] = ind
-
-
-        #the same result - manually handling the index
-        # ind = 0
-        # for row in data_reader:
-        #     if not header:
-        #         header.extend(row)
-        #         entity_name_index = header.index('eName')
-        #     else:
-        #         records.append(row)
-        #         index_by_name[row[entity_name_index]] = ind
-        #         ind += 1
 
 
 @start_complete_decorator(actions[1])
 def process_data():
-    if not header:
-        tui.error("Please load entity data first", "👆")
-        return False
 
-    utils.process.share_data(tui, header, records, index_by_name)  # gives access to vars in process module
-    tui.share_header(header)  # gives access of header in tui
+    if not chech_data_loaded():
+        return False
 
     operation_actions = ['Retrieve entity', 'Retrieve entity details', 'Categorise entities by type',
                          'Categorise entities by gravity', 'Summarise entities by orbit']
@@ -102,12 +101,8 @@ def process_data():
 
 @start_complete_decorator(actions[2])
 def visualise_data():
-    if not header:
-        tui.error("Please load entity data first", "👆")
+    if not chech_data_loaded():
         return False
-
-    utils.process.share_data(tui, header, records, index_by_name)  # gives access to vars in process module
-    tui.share_header(header)  # gives access of header in tui
 
     operation_actions = ['Entities by type', 'Entities by gravity', 'Summary of orbits', 'Animate gravities']
     operation_funcs = ['pie', 'bar', 'orbits', 'gravity']
@@ -136,7 +131,10 @@ def visualise_data():
 
 @start_complete_decorator(actions[3])
 def save_data():
-    print('Saving...')
+    if not chech_data_loaded():
+        return False
+    writer = JSON_writer()
+    writer.process_data().encode_data().write_data().display()
 
 
 def run():

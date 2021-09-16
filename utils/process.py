@@ -70,15 +70,16 @@ def entities_orbit(screen=True):
     # filters only planets from the input list (check if is an entity and if an entity if is a planet)
     planets = [x for x in inputs if x in index_by_name and records[index_by_name[x]][ind_orbits] == 'NA']
     # creates empty dict
-    print(planets)
+    # print(planets)
     orbits = {planet: {'small': [], 'large': []} for planet in planets}
 
     for entity in records:
         if entity[ind_orbits] in planets:  # checks if the entity orbits around one of the selected planets
             s_l = 'small' if float(entity[ind_radius]) < 100.0 else 'large'  # select the category of the entity
             orbits[entity[ind_orbits]][s_l].append(entity)
-    print(orbits)
+    # print(orbits)
     if screen:
+        print('process')
         for planet in planets:
             print(f"\n{planet} orbits:")
             tui.list_categories(orbits[planet])

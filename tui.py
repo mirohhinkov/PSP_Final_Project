@@ -178,7 +178,7 @@ def entity_details():
         if to_add and to_add not in ind:
             ind.append(to_add)
         else:
-            error("It's already there" if ind else "Please enter a proper value", "")
+            error("It's already there" if to_add else "Please enter a proper value", "")
     return [name, ind]
 
 
@@ -260,7 +260,7 @@ def gravity_range():
     :return: a tuple with the lower and upper limits
     """
     # TODO: Your code here
-    print("\nPlease the lower and upper limit for a range of gravity")
+    print("\nPlease enter the lower and upper limits for a range of gravity")
     lower = input_numb("lower limit: ")
     upper = input_numb("upper limit: ")
     return (lower, upper) if lower < upper else (upper, lower)
@@ -349,12 +349,12 @@ def is_numb(user_input):
     return user_input.isnumeric() or re.match(r'^\d*\.\d*$', user_input) is not None
 
 
-def input_numb(msg=''):
+def input_numb(msg="Please enter proper values"):
     while True:
         numb = input(msg).strip()
         if is_numb(numb):
             return float(numb)
-        error("Please enter proper values")
+        error(msg)
 
 
 def share_header(h):
@@ -362,7 +362,7 @@ def share_header(h):
     header = h
 
 
-def run():
+def test():
     # welcome()
     # print(menu())
     # print(source_data_path())
@@ -378,4 +378,4 @@ def run():
 
 
 if __name__ == "__main__":
-    run()
+    test()
