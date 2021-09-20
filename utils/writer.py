@@ -12,9 +12,9 @@ class JSON_writer(Abstract_writer):
     def process_data(self):
 
         source = utils.process.entities_category(False)
-        self.data['info'] = "Solent Solar Project"
-        self.data['Planets'] = sorted(source["Planets"])
-        self.data['Non-planets'] = sorted(source["Non-planets"])
+        self.data['info'] = "The Solar System Application"
+        self.data['data']['Planets'] = sorted(source["Planets"])
+        self.data['data']['Non-planets'] = sorted(source["Non-planets"])
         return self
 
     def encode_data(self):
@@ -28,3 +28,9 @@ class JSON_writer(Abstract_writer):
 
     def display(self):
         print(self.data)
+
+    def __repr__(self):
+        return self.data
+
+    def __str__(self):
+        return self.data

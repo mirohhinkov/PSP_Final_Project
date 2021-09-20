@@ -17,13 +17,15 @@ def welcome():
     :return: Does not return anything.
     """
     # TODO: Your code here
-    welcome_msg = " Solar Record Management System "
+    welcome_msg = "Solar Record Management System"
+    len_msg = len(welcome_msg)
     try:
         size = os.get_terminal_size().columns
     except (AttributeError, ValueError, OSError):
         size = 80
-    print(f"")
-    # print(welcome_msg.center(size, '-'))
+    print(('-' * len_msg).center(size, ' '))
+    print(welcome_msg.center(size, ' '))
+    print(('-' * len_msg).center(size, ' '))
 
 
 def menu():
@@ -170,11 +172,14 @@ def entity_details():
         user_input = input("index or name: ")
         if not user_input:
             break
+        # numeric user input
         if user_input.isnumeric():
             choice = int(user_input)
             to_add = choice if 0 < choice < len(header) else 0
+        # name input
         else:
             to_add = header.index(user_input) if user_input in header else 0
+        # check if input is correct or is already added
         if to_add and to_add not in ind:
             ind.append(to_add)
         else:
@@ -200,8 +205,21 @@ def list_entity(entity, cols=[]):
     :return: does not return anything
     """
     # TODO: Your code here
-    to_print = ["{0:<10}".format(entity[i]) for i in cols] if cols else ["{:<10}".format(x) for x in entity]
+    # The list defines output parameters for each element - justification and width
+    format_list = ["{:<18}", "{:<7}", "{:>12}", "{:>12}", "{:>12}", "{:>12}", "{:>12}", "{:>12}", "{:>12}", "{:>12}",\
+                   "{:>18}", "{:>18}", "{:>18}", "{:>18}", "{:>18}", "{:>18}", "{:>18}", "{:>18}", "{:>18}", "{:>18}",\
+                   "{:>22}", "{:>22}", "{:>22}", "{:>22}", "{:>22}", "{:>22}", "{:>22}", "{:>22}", "{:>22}", "{:>22}",\
+                   "{:>22}", "{:>22}", "{:>22}", "{:>22}", "{:>22}", "{:>22}"]
+    # creates a list of formatted strings
+    to_print = [format_list[i].format(entity[i]) for i in cols] if cols else [format_list[i].format(entity[i]) for i in range(len(entity))]
+    """
+        print unpacked list, it is equivalent to:
+        for p in to_print:
+            print(p, end='')
+        print()
+    """
     print(*to_print)
+
 
 
 def list_entities(entities, cols=[]):

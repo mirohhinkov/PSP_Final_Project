@@ -148,3 +148,4 @@ def gravity_animation(categories):
 
     animation = FuncAnimation(fig, func=a_frames, frames=np.arange(1, 3, 0.1), interval=100)
     animation.save('./img/anim.gif')
+
