@@ -13,6 +13,7 @@ class JSON_writer(Abstract_writer):
 
         source = utils.process.entities_category(False)
         self.data['info'] = "The Solar System Application"
+        self.data['data'] = {}
         self.data['data']['Planets'] = sorted(source["Planets"])
         self.data['data']['Non-planets'] = sorted(source["Non-planets"])
         return self
